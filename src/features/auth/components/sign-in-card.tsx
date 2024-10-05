@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,14 +14,25 @@ import React, { useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { SignInFlow } from '../types';
+import { useAuthActions } from '@convex-dev/auth/react';
 
 interface SignInCardProps {
-  setState:(state:SignInFlow) => void
+  setState: (state: SignInFlow) => void;
 }
 
 function SignInCard({ setState }: SignInCardProps) {
+  const { signIn } = useAuthActions();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [pending, setPending] = useState(false);
+
+  const handleProviderSignIn =(value: 'github' | 'google') => {
+    setPending(true)
+    signIn(value).then(() => {
+      setPending(false)
+    })
+  }
   return (
     <Card className='w-full h-full p-8'>
       <CardHeader className='px-0 pt-0'>
@@ -33,7 +44,7 @@ function SignInCard({ setState }: SignInCardProps) {
       <CardContent className='space-y-5 px-0 pb-0'>
         <form className='space-y-2.5'>
           <Input
-            disabled={false}
+            disabled={pending}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type='email'
@@ -41,23 +52,23 @@ function SignInCard({ setState }: SignInCardProps) {
             required
           />
           <Input
-            disabled={false}
+            disabled={pending}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type='password'
             placeholder='Password'
             required
           />
-          <Button disabled={false} type='submit' className='w-full' size='lg'>
+          <Button disabled={pending} type='submit' className='w-full' size='lg'>
             Continue
           </Button>
         </form>
         <Separator />
         <div className='flex flex-col gap-y-2.5'>
           <Button
-            disabled={false}
+            disabled={pending}
             type='submit'
-            onClick={() => {}}
+            onClick={() => handleProviderSignIn('google')}
             variant='outline'
             className='w-full relative'
             size='lg'
@@ -66,9 +77,9 @@ function SignInCard({ setState }: SignInCardProps) {
             Sign in with Google
           </Button>
           <Button
-            disabled={false}
+            disabled={pending}
             type='submit'
-            onClick={() => {}}
+            onClick={() => handleProviderSignIn('github')}
             variant='outline'
             className='w-full relative'
             size='lg'
@@ -77,7 +88,15 @@ function SignInCard({ setState }: SignInCardProps) {
             Sign in with GitHub
           </Button>
         </div>
-        <p className='text-xs text-muted-foreground'>Don&apos;t have an account? <span onClick={() => setState('signUp')} className='text-sky-700 hover:underline cursor-pointer'>Sign up</span></p>
+        <p className='text-xs text-muted-foreground'>
+          Don&apos;t have an account?{' '}
+          <span
+            onClick={() => setState('signUp')}
+            className='text-sky-700 hover:underline cursor-pointer'
+          >
+            Sign up
+          </span>
+        </p>
       </CardContent>
     </Card>
   );
