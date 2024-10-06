@@ -23,6 +23,7 @@ interface SignUpCardProps {
 function SignUpCard({ setState }: SignUpCardProps) {
   const { signIn } = useAuthActions();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -45,7 +46,7 @@ function SignUpCard({ setState }: SignUpCardProps) {
     }
 
     setPending(true);
-    signIn('password', { email, password, flow: 'signUp' })
+    signIn('password', { name, email, password, flow: 'signUp' })
       .catch(() => {
         setError('Something went wrong, please try again');
       })
@@ -58,7 +59,7 @@ function SignUpCard({ setState }: SignUpCardProps) {
       <CardHeader className='px-0 pt-0'>
         <CardTitle>Sign up to continue</CardTitle>
         <CardDescription>
-          Enter your email and password to sign in
+          Enter your email and password to sign up
         </CardDescription>
       </CardHeader>
       {!!error && (
@@ -69,6 +70,14 @@ function SignUpCard({ setState }: SignUpCardProps) {
       )}
       <CardContent className='space-y-5 px-0 pb-0'>
         <form className='space-y-2.5' onSubmit={handlePasswordSignUp}>
+          <Input
+            disabled={pending}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type='text'
+            placeholder='Name'
+            required
+          />
           <Input
             disabled={pending}
             value={email}
