@@ -1,14 +1,10 @@
-import React from 'react'
+'use client'
 
-interface WorkspacePageProps {
-  params: {
-    workspaceId: string
-  }
-}
 
-function WorkspacePage({ params }: WorkspacePageProps) {
+
+function WorkspacePage() {
   return (
-    <div>WorkspacePage id: {params.workspaceId}</div>
+    <div>WorkspacePage data</div>
   )
 }
 
