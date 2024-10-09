@@ -10,9 +10,11 @@ import {
 import { useCurrentUser } from '../api/use-current-user';
 import { Loader2, LogOut } from 'lucide-react';
 import { useAuthActions } from '@convex-dev/auth/react';
+import { useRouter } from 'next/navigation';
 
 
 function UserButton() {
+  const router = useRouter();
   const {signOut}=useAuthActions();
   const {data, isLoading} = useCurrentUser();
 
@@ -27,6 +29,11 @@ function UserButton() {
   const {name, image} = data;
   const avatarFallback = name!.charAt(0).toUpperCase();
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/auth');
+  };
+
   return <DropdownMenu modal={false}>
     <DropdownMenuTrigger className='outline-none relative'>
       <Avatar className='size-10 hover:opacity-75 transition'>
@@ -37,7 +44,7 @@ function UserButton() {
       </Avatar>
     </DropdownMenuTrigger>
     <DropdownMenuContent align='center' side='right' className='w-60'>
-      <DropdownMenuItem onClick={() => signOut()} className='h-10 cursor-pointer'>
+      <DropdownMenuItem onClick={handleSignOut} className='h-10 cursor-pointer'>
         <LogOut className='sixe-4 mr-2'/>
         Log out
       </DropdownMenuItem>
